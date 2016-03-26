@@ -69,5 +69,5 @@ theme: yilia
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/anxiaoyi/anxiaoyi.github.io.git
-  branch: [master]
+  repository: https://github.com/anxiaoyi/anxiaoyi.github.io.git
+  branch: master
