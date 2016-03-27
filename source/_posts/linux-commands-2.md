@@ -77,4 +77,7 @@ npm install hexo-deployer-git --save
 hexo clean
 hexo generate
 hexo deploy
+
+# how to add CNAME file
+touch `CNAME` file in `source` folder
 ```
