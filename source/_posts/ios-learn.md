@@ -294,3 +294,17 @@ xcodebuild -target MyiOSApp -xcconfig configuration.xcconfig
 ```
 
 [References](https://developer.apple.com/library/ios/technotes/tn2339/_index.html)
+
+## App Transport Security has blocked a cleartext HTTP (http://) resource load si
+
+在iOS9 beta中，苹果将原http协议改成了https协议，使用 TLS1.2 SSL加密请求数据。
+
+解决方法：在`info.plist`加入key
+
+```xml
+<key>NSAppTransportSecurity</key>
+<dict>
+<key>NSAllowsArbitraryLoads</key>
+<true/>
+</dict>
+```
