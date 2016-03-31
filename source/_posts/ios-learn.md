@@ -308,3 +308,18 @@ xcodebuild -target MyiOSApp -xcconfig configuration.xcconfig
 <true/>
 </dict>
 ```
+
+## 特殊语句
+
+```objective-c
+NSAssert(NO, @"ERROR: required method not implemented: %s", __PRETTY_FUNCTION__);
+
+#ifdef DEBUG
+#   define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#   define DLog(...)
+#endif
+
+// ALog always displays output regardless of the DEBUG setting
+#define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+```
