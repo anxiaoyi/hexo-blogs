@@ -323,3 +323,54 @@ NSAssert(NO, @"ERROR: required method not implemented: %s", __PRETTY_FUNCTION__)
 // ALog always displays output regardless of the DEBUG setting
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 ```
+
+## ARC forbids synthesizing a property of an Objective-C object with unspecified ownership or storage attribute
+
+声明`block`为`@property`的时候会出现这种情况
+
+```objective-c
+@property (nonatomic) ABlock configureCellBlock;
+```
+
+手动指定告诉ARC`copy`属性即可解决
+
+```objective-c
+@property (nonatomic, copy) ABlock configureCellBlock;
+
+self.aBlock = [configureBlock copy];
+```
+
+## `SQLite`数据库`Error inserting batch: near "an": syntax error`
+
+[Android SQLite](http://www.cnblogs.com/iOcean/archive/2012/03/02/2377648.html)
+[FMDB insert single-quote error](https://github.com/ccgus/fmdb/issues/345)
+
+## `[UIWindow endDisablingInterfaceAutorotationAnimated:]`
+
+在`UITableView`中，当键盘弹起来的时候，滑动`UITableView`，致使键盘落下，那么就会给出这种警告。
+
+```objective-c
+-[UIWindow endDisablingInterfaceAutorotationAnimated:] called on <UITextEffectsWindow: 0x7ff30963dbf0; frame = (0 0; 414 736); opaque = NO; autoresize = W+H; layer = <UIWindowLayer: 0x7ff30963e210>> without matching -beginDisablingInterfaceAutorotation. Ignoring.
+```
+
+解决方法，需要在`- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView`中写上`[textView resignFirstResponder]`即可解决
+
+## `UITableView` 与 `NSRangeException`
+
+出现下面异常:
+
+```objective-c
+*** Terminating app due to uncaught exception 'NSRangeException', reason: '*** -[__NSOrderedSetM objectAtIndex:]: index 19 beyond bounds [0 .. 11]'
+```
+
+有可能是因为`UITableView`正在使用的`NSMutableArray`或`NSMutableOrderedSet`里面的内容，在文件的其它地方已经被修改了。然而`UITableView`并不知道这一切。所以应该确保数据源一旦被修改之后，立马调用`UITableView reloadData`方法，来及时通知`UITableView`更新。
+
+千万不要像下面这样更新：
+
+```objective-c
+- (void)replaceDataWithNewData:(NSMutableArray*)newData {
+    NSMutableArray *oldData = ...; //从其它地方拿到oldData
+    [oldData removeObjectsInRange:NSMakeRange(0, msgs.count)];
+    [oldData addObjectsFromArray:newData];
+}
+```
