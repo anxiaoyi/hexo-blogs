@@ -374,3 +374,15 @@ self.aBlock = [configureBlock copy];
     [oldData addObjectsFromArray:newData];
 }
 ```
+
+## Back button callback in navigationController in iOS
+
+```objective-c
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+       // back button was pressed.  We know this is true because self is no longer
+       // in the navigation stack.  
+    }
+    [super viewWillDisappear:animated];
+}
+```
