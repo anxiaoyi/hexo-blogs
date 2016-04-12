@@ -386,3 +386,19 @@ self.aBlock = [configureBlock copy];
     [super viewWillDisappear:animated];
 }
 ```
+
+## `UITableView` 去除空白`Cell`的`separator`
+
+```objective-c
+self.tableView.tableFooterView = [UIView new];
+```
+
+## duplicate symbols for architecture armv7
+
+```objective-c
+...
+ld: 534 duplicate symbols for architecture armv7
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+```
+
+可能是因为在`TARGETS`-`General`-`Linked Frameworks and Libraries`中，既引用了`xxx.a`，又引用了相关的`xxx.Framework`，导致`symbols duplicate`
