@@ -402,3 +402,55 @@ clang: error: linker command failed with exit code 1 (use -v to see invocation)
 ```
 
 可能是因为在`TARGETS`-`General`-`Linked Frameworks and Libraries`中，既引用了`xxx.a`，又引用了相关的`xxx.Framework`，导致`symbols duplicate`
+
+## Custom `UICollectionViewCell`
+
+需要重写`initWithFrame:`这个方法，才能达到目的
+
+```objective-c
+- (instance) initWithFrame:(CGRect)frame {
+    if ([self = super initWithFrame:frame]) {
+        // do initlize things
+    }
+}
+```
+
+## 界面全部黑屏
+
+可能原因：`translatesAutoresizingMaskIntoConstraints`调用对象错误。正确的`AutoLayout`使用方法应该是：`superView`无需调用`translatesAutoresizingMaskIntoConstraints`，其`subView`需要每个都调用`translatesAutoresizingMaskIntoConstraints`方法，才能工作正常
+
+正是由于错误的在`UICollectionViewCell.contentView.translatesAutoresizingMaskIntoConstraints = NO`调用，所以才导致屏幕一片黑白，以为`UICollectionViewController`无法正常工作。
+
+## Make `UICollectionView` scrollble
+
+```objective-c
+self.collectionView.alwaysBounceVertical = YES;
+```
+
+## API
+
+```objective-c
+[self.navigationViewController popToViewController:xxController animated:YES];
+```
+
+## `UILabel`文字重叠(新文字显示在旧文字之上)
+
+可能是因为在其它`Queue`中更新了`UI`
+
+```objective-c
+void runOnMainQueueWithoutDeadlocking(void (^block)(void))
+{
+    if ([NSThread isMainThread])
+    {
+        block();
+    }
+    else
+    {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+}                     
+```
+
+## `AutoLayout` 确定 UIView 自身的大小
+
+直接在`init`方法中调用`self.frame = CGRectMake(0, 0, 宽度，高度)`完事
