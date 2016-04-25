@@ -172,3 +172,97 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	deliveryModule.getEstimatedDeliveryTime(); 
 });
 ```
+
+## Javascript extend
+
+下面这段代码可实现`extend`为什么？
+
+```
+function extend(child, parent) {
+    child.prototype = (function(supportObjectCreate) {
+        
+        // support Object.create method (ECMAScript 5.1)
+        if (supportObjectCreate) return Object.create(parent.prototype);
+        
+        // not support Object.create method (like IE8, IE7 ...)
+        function F() {}
+        F.prototype = parent.prototype;
+        return new F();
+        
+    } (Object.create !== undefined));
+    
+    child.prototype.constructor = child;
+}
+
+function Animal() {
+}
+
+function Cat() {
+    Animal.call( this );
+}
+extend( Cat, Animal );
+```
+
+解释：
+
+Every JavaScript object has a prototype. The prototype is also an object.
+All JavaScript objects inherit their properties and methods from their prototype.
+All JavaScript objects inherit the properties and methods from their prototype.
+Objects created using an object literal, or with new Object(), inherit from a prototype called Object.prototype.
+Objects created with new Date() inherit the Date.prototype.
+The Object.prototype is on the top of the prototype chain.
+All JavaScript objects (Date, Array, RegExp, Function, ....) inherit from the Object.prototype.
+
+```javascript
+function Animal() {
+
+    console.log( 'Animal Constructor get called' );
+
+    this.name = 'Animal';
+
+    this.hello = function() {
+        console.log( 'I am ' + this.name );
+    }
+    
+}
+
+function Cat() {
+
+    Animal.call( this );
+
+    console.log( 'Cat Constructor get called' );
+
+    this.name = 'Cat';
+
+    this.hello = function() {
+        console.log( 'I am ' + this.name );
+    };
+    
+}
+Cat.prototype = Object.create( Animal.prototype );
+
+var a = new Animal();
+var c = new Cat();
+console.log( c instanceof Cat );
+console.log( c instanceof Animal );
+console.log( a.constructor === Animal );
+console.log( c.constructor === Cat ); // false
+
+// Fix
+c.constructor = Cat;
+console.log( c.constructor === Cat ); // true
+
+console.log( Animal.prototype );
+console.log( Animal.prototype.constructor );
+console.log( Object.create( Animal.prototype ) );
+```
+
+Determining the Type of an Instance
+
+- `instanceof`
+- `a.constructor === A`
+
+[instanceof](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof)
+[understanding-javascript-constructors](https://css-tricks.com/understanding-javascript-constructors/)
+[js_object_prototypes](http://www.w3schools.com/js/js_object_prototypes.asp)
+[call](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
