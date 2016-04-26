@@ -454,3 +454,33 @@ void runOnMainQueueWithoutDeadlocking(void (^block)(void))
 ## `AutoLayout` 确定 UIView 自身的大小
 
 直接在`init`方法中调用`self.frame = CGRectMake(0, 0, 宽度，高度)`完事
+
+## `UITableViewCell + AutoLayout + HideView`
+
+如果需要动态控制`UITableViewCell`内部某个`View`是否显示，那么不能够使用`View.hidden`来约束它，因为及时`hidden=YES`，那么它所占据的位置依然存在，`NSLayoutConstraints`依然生效。所以应该给这个`View`添加`NSLayoutConstraints`对其高度进行约束，通过设置`constants`为`0`，或为`固定高度`来达到隐藏显示`View`的目的。
+
+注意在这个过程中，我们应该适当结合`UILayoutPriorityXXX`和`NSLayoutRelationXXX`来控制`NSLayoutConstraints`的表现行为，尤其是因为`UITableViewCell`在`UITableView`中是被复用的，后一个`UITableViewCell`将会打破前一个设置的`NSLayoutConstraints`，而如果不对`priority`或者`relation`适当放松的话，那么将会弹出warning: `NSLayoutConstraints will attempt break ...`
+
+## `UITableViewCell`中的`UITextView`无法被选中，未收到相关事件
+
+你需要覆盖`UITableViewCell`的`hitTest`方法，参考[stackoverflow](http://stackoverflow.com/questions/7719412/how-to-ignore-touch-events-and-pass-them-to-another-subviews-uicontrol-objects)
+
+```objective-c
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *hitView = [super hitTest:point withEvent:event];
+
+    // If the hitView is THIS view, return the view that you want to receive the touch instead:
+    if (hitView == self) {
+        return otherView;
+    }
+    // Else return the hitView (as it could be one of this view's buttons):
+    return hitView;
+}
+```
+
+## 设置`UITextView`的`word break`模式
+
+```objective-c
+textView.textContainer.lineBreakMode = NSLineBreakXXX;
+```
