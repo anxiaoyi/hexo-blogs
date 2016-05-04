@@ -437,6 +437,8 @@ self.collectionView.alwaysBounceVertical = YES;
 
 可能是因为在其它`Queue`中更新了`UI`
 
+[ios-ensure-execution-on-main-thread](http://stackoverflow.com/questions/11582223/ios-ensure-execution-on-main-thread)
+
 ```objective-c
 void runOnMainQueueWithoutDeadlocking(void (^block)(void))
 {
@@ -450,6 +452,20 @@ void runOnMainQueueWithoutDeadlocking(void (^block)(void))
     }
 }                     
 ```
+
+可能是你既重写了`initWithFrame`又重写了`init`方法，导致添加了两个`UILabel`
+
+```objective-c
+- (id)init {
+}
+
+- (id)initWithFrame {
+}
+```
+
+但其实`init`内部会调用`initWithFrame:CGRectZero`
+
+[Why UIView calls both init and initWithFrame?](http://stackoverflow.com/questions/19423182/why-uiview-calls-both-init-and-initwithframe)
 
 ## `AutoLayout` 确定 UIView 自身的大小
 
