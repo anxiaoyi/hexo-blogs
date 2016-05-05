@@ -81,3 +81,27 @@ hexo deploy
 # how to add CNAME file
 touch `CNAME` file in `source` folder
 ```
+
+### Some importan thing about `grep`
+
+```bash
+-E, --extended-regexp
+             Interpret pattern as an extended regular expression (i.e. force grep to behave as egrep).
+
+-o, --only-matching
+             Prints only the matching part of the lines.
+
+-n, --line-number
+             Each output line is preceded by its relative line number in the file, starting at line 1.  The line
+             number counter is reset for each file processed.  This option is ignored if -c, -L, -l, or -q is spec-
+             ified.
+
+-R, -r, --recursive
+             Recursively search subdirectories listed.
+```
+
+Basic usage:
+
+```bash
+grep -Rn 'something' ./
+```
