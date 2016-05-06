@@ -17,3 +17,21 @@ categories:
 ```bash
 sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
 ```
+
+## Change background color
+
+`Preferences`->`Editor`->`Colors & Fonts`->`General`->`Default text`->`Checkout Background`
+
+## Android Studio Proxy by Lantern
+
+Host name: 127.0.0.1, Port number: 8787
+
+## Extract Hard-Coded String Literals
+
+```bash
+Alt + Enter
+```
+
+## Delete a module in Android Studio
+
+`File`->`Project Structure`, Select `Modules`, Click `Minus` icon
