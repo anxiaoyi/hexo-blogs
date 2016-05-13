@@ -35,3 +35,7 @@ Alt + Enter
 ## Delete a module in Android Studio
 
 `File`->`Project Structure`, Select `Modules`, Click `Minus` icon
+
+## ImageView in ListView, placeholder can not use the same ColorDrawable
+
+width and height may be fixed
