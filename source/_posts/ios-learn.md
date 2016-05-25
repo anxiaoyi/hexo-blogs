@@ -589,3 +589,14 @@ If you find execute command `pod trunk push xxx.podspec` was too slow, then you 
 pod install
 pod update
 ```
+
+## Suppress warning “Category is implementing a method which will also be implemented by its primary class”
+
+```objective-c
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+
+// do your override
+
+#pragma clang diagnostic pop
+```
