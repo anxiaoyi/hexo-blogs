@@ -197,3 +197,10 @@ git reset --soft HEAD~
 ```bash
 git rm --cached ProjectFolder.xcodeproj/project.xcworkspace/xcuserdata/myUserName.xcuserdatad/UserInterfaceState.xcuserstate
 ```
+
+### git release with tag
+
+```bash
+git tag -a 1.2.3 -m 'my version 1.2.3'
+git push origin 1.2.3
+```

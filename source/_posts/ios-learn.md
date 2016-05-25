@@ -500,3 +500,92 @@ void runOnMainQueueWithoutDeadlocking(void (^block)(void))
 ```objective-c
 textView.textContainer.lineBreakMode = NSLineBreakXXX;
 ```
+
+## `UITableViewCell` 设置点击之后无样式：
+
+```objective-c
+self.selectionStyle = UITableViewCellSelectionStyleNone;
+```
+
+## `Objective-C` 不小心（无意识）覆盖父类私有方法的问题:
+
+```objective-c
+
+// Parent class
+
+@interface Fruit: NSObject
+@end
+
+@implementation Fruit:
+
+- (instancetype)init {
+  if (self = [super init]) {
+     [self common_init];
+  }
+  return self;
+}
+
+- (void)common_init {
+  NSLog(@"Fruit common init");
+}
+
+@end
+
+// Child class
+@interface Apple: Fruit
+@end
+
+@implementation Apple:
+
+- (instancetype)init {
+  if (self = [super init]) {
+     [self common_init];
+  }
+  return self;
+}
+
+- (void)common_init {
+  NSLog(@"Apple common init");
+}
+
+@end
+
+// Execute
+Fruit fruit = [Apple new];
+
+// Execute Result
+// NSLog: Apple common init
+// 注意到了没有，子类无意识的覆盖了父类里面私有的用来初始化自己的方法
+// 导致父类的初始化操作没有被执行
+// This is a big problem that you should take cared ...
+
+```
+
+## Http Block
+
+App Transport Security has blocked a cleartext HTTP (http://) resource load since it is insecure. Temporary exceptions can be configured via your app's Info.plist file.
+
+TARGETS-Info-add a row-`App Transport Security Settings`-`Allow Arbitrary Loads`:`YES`
+
+## Cocoapods
+
+### Register
+
+pod trunk register user_email user_name --description='macbook pro'
+
+### Deploy
+
+```bash
+pod spec lint xxx.podspec
+pod trunk push xxx.podspec --verbose
+```
+
+If you find execute command `pod trunk push xxx.podspec` was too slow, then you can
+`cd ~/.cocopods/repos/master; git pull origin master`, then re-execute the `pud trunk push xxx.podspec` command
+
+### `Pod Update`
+
+```bash
+pod install
+pod update
+```
