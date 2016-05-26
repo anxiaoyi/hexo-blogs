@@ -8,6 +8,10 @@ categories:
 - iOS
 ---
 
+`iOS`开发过程中遇到的问题，Hint，解决方案等。
+
+<!-- more -->
+
 ## 什么时候使用 `@class`
 
 The @class directive minimizes the amount of code seen by the compiler and linker, and is therefore the simplest way to give a forward declaration of a class name. Being simple, it avoids potential problems that may come with importing files that import still other files. For example, if one class declares a statically typed instance variable of another class, and their two interface files import each other, neither class may compile correctly.
@@ -600,3 +604,32 @@ pod update
 
 #pragma clang diagnostic pop
 ```
+
+## 响应`UITableViewCell`内部`View`的事件
+
+如果你设置了`self.tableView.allowsSelection = NO`，此时`UITableView`不能响应click事件，点击无反应，`didSelectRowAtIndexPath`也不会被调用。这个时候绑定了`UITapGestureRecognizer`给`UITableView`，那么这个事件是可以被响应的。
+
+假设你的`UITableViewCell`如下所示:
+
+```objective-c
+---------------------------
+|              ---------- |
+|              | Button | |
+|              ---------- |
+---------------------------
+```
+
+当用户点击`Button`左边区域的时候，`didSelectRowAtIndexPath`方法被调用，事件响应者为`UITableViewCell`，如果点击`Button`区域，那么事件响应者仍然为`UITableViewCell`：那么怎么将用户点击事件传递给`Button`按钮呢？答案就是`UITableViewCell`的`hitTest`方法，你需要像下面这样复写它：
+
+```objective-c
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+  UIView *button = [self.buttonView]; // get your button view
+  CGPoint p = [self convertPoint:point toView:button];
+  if (CGRectContainsPoint(button.bounds, p)) {
+     return [button hitTest:p withEvent:event];
+  }
+  return [super hitTest:point withEvent:event];
+}
+```
+
+这个时候，一旦用户点击的`CGPoint`落在`Button`的`bounds`范围内的话，那么`Button`将会响应这个事件，你绑定在`Button`上面的事件(如：`UITapGestureRecognizer`)就会被触发，当然`didSelectRowAtIndexPath`是不会被触发了。
