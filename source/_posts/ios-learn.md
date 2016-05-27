@@ -633,3 +633,73 @@ pod update
 ```
 
 这个时候，一旦用户点击的`CGPoint`落在`Button`的`bounds`范围内的话，那么`Button`将会响应这个事件，你绑定在`Button`上面的事件(如：`UITapGestureRecognizer`)就会被触发，当然`didSelectRowAtIndexPath`是不会被触发了。
+
+## `kUTTypeImage` undeclared
+
+- Link MobileCoreServices.framework
+
+```objc
+MobileCoreServices.framework
+```
+
+- import `MobileCoreServices.h`
+
+```objc
+#import <MobileCoreServices/MobileCoreServices.h>
+```
+
+## `UITableViewController reloadData`的更新问题
+
+`AController` is a subclass of `UITableViewController`
+
+Bussiness Logic:
+
+1. `AController` present `UIImagePickerController` to select a `UIImage`.
+2. After Selected, upload `UIImage` to server, and get the url: `http://xxx.png`.
+3. Notify `AController` to refresh data by calling method: `[AController.tableView reloadData]`;
+
+The problem happend at step 3.
+
+After get the correct url, I try to call `[self.tableView reloadData]`, but it seems like `AController` not get update any more.
+
+What's happend ??? Why ???
+
+I print `self` address in the method `viewWillAppear`, and print `self` address in the position before execute `[self.tableView reloadData]`. Suddenly, I found current `self` is different from the origin one before we present the `UIImagePickerController`. Current `self` may get re-allocated, it's address has changed, and the origin one may be get deallocated by the iOS system.
+
+But I still don't know how to find the correct way to solve the problem ... How to avoid `AController` get deallocated ?
+
+After a short moment, I begin try to popup an `AlertView` when com back from `UIImagePickerController`, so the code like this:
+
+```objc
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+  UIAlertController *alertController = createADummyController;
+  [self presentViewController:alertController animated:NO completion:nil];
+}
+```
+
+Then, `Build`, `Run`, ..., the `UIAlertController` not popup, instead, the XCode print the following warning info:
+
+```
+Warning: Attempt to present <UIAlertController: 0x7ff70a7614f0> on <AController: 0x7ff70a63de20> whose view is not in the window hierarchy!
+```
+
+What's the Funk ???? ... Think after a short moment, I noticed that the fact that current `self` is not a legal one. But the `AController` is visible, how can I get the current valid `self` or visible controller ? Suddenly, I rememberd I have store current visible controller when the method `didFinishLaunchinigWithOptions` get called in the `AppDelegate` class, so ... I know how to achive my goal ^_^
+
+```
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+  UIAlertController *alertController = createADummyController;
+  [self presentViewController:alertController animated:NO completion:nil];
+}
+
+- (AController*)currentVisibleController {
+  AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+  UIViewController *visibleController = appDelegate.visibleController;
+  AController *aController = [self findControllerByVisibleController:visibleController];
+  return aController;
+}
+
+- (AController*)findControllerByVisibleController:(UIViewController*)visibleController {
+  // find AController by visibleController
+  return find;
+}
+```
