@@ -105,3 +105,9 @@ Basic usage:
 ```bash
 grep -Rn 'something' ./
 ```
+
+### Decimal to hex
+
+```bash
+echo 'obase=16; 122' | bc
+```

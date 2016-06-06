@@ -143,3 +143,23 @@ buildscript {
 ## Github JCenter Badge
 
 [![Jcenter Status](https://api.bintray.com/packages/{YOUR_NAME}/maven/{YOUR_PROJECT}/images/download.svg)](https://bintray.com/{YOUR_NAME}/maven/{YOUR_PROJECT})
+
+## Gradle Build
+
+```
+Error:Could not find com.android.support:support-annotations:23.3.0.
+Required by:
+    PPMessage:app:unspecified > com.jakewharton:butterknife:8.0.1
+    PPMessage:app:unspecified > com.jakewharton:butterknife:8.0.1 > com.jakewharton:butterknife-annotations:8.0.1
+
+Please install the Android Support Repository from the Android SDK Manager.
+<a href="openAndroidSdkManager">Open Android SDK Manager</a>
+```
+
+Android Studio -> Preferences -> Appearance & Behavior -> System Settings -> Android SDK -> Launch Standalone SDK Manager (Left-Bottom corner) ...
+
+Update `Extras -> Android Support Repository`, OK
+
+## Format Code
+
+Command + Alt + L

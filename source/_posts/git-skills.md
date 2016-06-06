@@ -204,3 +204,17 @@ git rm --cached ProjectFolder.xcodeproj/project.xcworkspace/xcuserdata/myUserNam
 git tag -a 1.2.3 -m 'my version 1.2.3'
 git push origin 1.2.3
 ```
+
+[git-tagging](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
+
+By default, the git push command doesn’t transfer tags to remote servers. You will have to explicitly push tags to a shared server after you have created them. This process is just like sharing remote branches – you can run `git push origin [tagname]`.
+s
+```bash
+git push origin --tags
+```
+
+Remove Tag:
+
+```bash
+git tag -d version-num
+```
