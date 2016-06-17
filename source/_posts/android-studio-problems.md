@@ -163,3 +163,9 @@ Update `Extras -> Android Support Repository`, OK
 ## Format Code
 
 Command + Alt + L
+
+## Device offline
+
+```bash
+adb kill-server
+```

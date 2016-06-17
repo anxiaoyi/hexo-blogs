@@ -218,3 +218,100 @@ Task 要可以 Cancel
 使用大量数据校验
 
 ProgressDialog 调用 dismiss 使其消失，而不是 hide，否则这个 Activity finish之后，可能会引发 Activity Memory Leak Problem
+
+遇到下面异常，应该考虑升级`Android Studio`和相关`Android Support Library`
+
+VFY: replacing opcode 0x6f at 0x008f
+06-08 12:36:19.944 27636-27636/x.y.z I/dalvikvm: DexOpt: illegal method access (call Landroid/support/v4/app/Fragment;.performPrepareOptionsMenu (Landroid/view/Menu;)Z from Lcom/ppmessage/ppkefu/ui/fragment/SettingsFragment;)
+06-08 12:36:19.944 27636-27636/x.y.z I/dalvikvm: Could not find method android.support.v4.app.Fragment.performPrepareOptionsMenu, referenced from method x.y.z.ui.fragment.SettingsFragment.access$super
+06-08 12:36:19.944 27636-27636/x.y.z W/dalvikvm: VFY: unable to resolve virtual method 4265: Landroid/support/v4/app/Fragment;.performPrepareOptionsMenu (Landroid/view/Menu;)Z
+06-08 12:36:19.944 27636-27636/x.y.z D/dalvikvm: VFY: replacing opcode 0x6f at 0x0098
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: DexOpt: illegal method access (call Landroid/support/v4/app/Fragment;.performStop ()V from Lcom/ppmessage/ppkefu/ui/fragment/SettingsFragment;)
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: Could not find method android.support.v4.app.Fragment.performStop, referenced from method x.y.z.ui.fragment.SettingsFragment.access$super
+06-08 12:36:19.954 27636-27636/x.y.z W/dalvikvm: VFY: unable to resolve virtual method 4270: Landroid/support/v4/app/Fragment;.performStop ()V
+06-08 12:36:19.954 27636-27636/x.y.z D/dalvikvm: VFY: replacing opcode 0x6f at 0x00a2
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: DexOpt: illegal method access (call Landroid/support/v4/app/Fragment;.performCreateOptionsMenu (Landroid/view/Menu;Landroid/view/MenuInflater;)Z from Lcom/ppmessage/ppkefu/ui/fragment/SettingsFragment;)
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: Could not find method android.support.v4.app.Fragment.performCreateOptionsMenu, referenced from method x.y.z.ui.fragment.SettingsFragment.access$super
+06-08 12:36:19.954 27636-27636/x.y.z W/dalvikvm: VFY: unable to resolve virtual method 4257: Landroid/support/v4/app/Fragment;.performCreateOptionsMenu (Landroid/view/Menu;Landroid/view/MenuInflater;)Z
+06-08 12:36:19.954 27636-27636/x.y.z D/dalvikvm: VFY: replacing opcode 0x6f at 0x00af
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: DexOpt: illegal method access (call Landroid/support/v4/app/Fragment;.performOptionsItemSelected (Landroid/view/MenuItem;)Z from Lcom/ppmessage/ppkefu/ui/fragment/SettingsFragment;)
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: Could not find method android.support.v4.app.Fragment.performOptionsItemSelected, referenced from method x.y.z.ui.fragment.SettingsFragment.access$super
+06-08 12:36:19.954 27636-27636/x.y.z W/dalvikvm: VFY: unable to resolve virtual method 4262: Landroid/support/v4/app/Fragment;.performOptionsItemSelected (Landroid/view/MenuItem;)Z
+06-08 12:36:19.954 27636-27636/x.y.z D/dalvikvm: VFY: replacing opcode 0x6f at 0x014b
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: DexOpt: illegal method access (call Landroid/support/v4/app/Fragment;.performConfigurationChanged (Landroid/content/res/Configuration;)V from Lcom/ppmessage/ppkefu/ui/fragment/SettingsFragment;)
+06-08 12:36:19.954 27636-27636/x.y.z I/dalvikvm: Could not find method android.support.v4.app.Fragment.performConfigurationChanged, referenced from method x.y.z.ui.fragment.SettingsFragment.access$super
+06-08 12:36:19.954 27636-27636/x.y.z W/dalvikvm: VFY: unable to resolve virtual method 4254: Landroid/support/v4/app/Fragment;.performConfigurationChanged (Landroid/content/res/Configuration;)V
+06-08 12:36:19.954 27636-27636/x.y.z D/dalvikvm: VFY: replacing opcode 0x6f at 0x01dc
+
+## Mutiple types of ListView Reuse
+
+The Wrong Solution:
+
+```java
+@Override
+public View getView(int position, View convertView, ViewGroup parent) {
+       // 1. find type
+       int type = getItemViewType(position);
+
+       View v = null;
+       if (type == TYPE_1) {
+          ViewHolderType1 type1Holder = null;
+          if (convertView == null) {
+             convertView = inflater(R.layout.type_1, parent, false);
+             type1Holder = new ViewHolderType1();
+             convertView.setTag(type1Holder);
+          } else {
+            type1Holder = (ViewHolderType1) convertView.getTag();
+          }
+
+          // Do something with type1Holder
+
+       } else if (type == TYPE_2) {
+         ViewHolderType2 type2Holder = null;
+         if (convertView == null) {
+            convertView = inflater(R.layout.type_2, parent, false);
+            type2Holder = new ViewHolderType2();
+            convertView.setTag(type2Holder);
+         } else {
+           type2Holder = (ViewHolderType2) convertView.getTag();
+         }
+
+         // Do something with type2Holder
+
+       }
+
+       return v;
+}
+
+```
+
+Sometimes, it will crash with exception :
+
+```java
+java.lang.ClassCastException: ViewHolderType2 cannot be cast to ViewHolderType1
+```
+
+The Right Solution:
+
+```java
+if (convertView == null || convertView.getTag().getClass() != ViewHolderType1.class) {
+}
+
+if (convertView == null || convertView.getTag().getClass() != ViewHolderType2.class) {
+}
+
+...
+```
+
+References:
+
+[StackOverflow-Reusing-Views](http://stackoverflow.com/questions/13297299/reusing-views-in-android-listview-with-2-different-layouts)
+
+[SpareTimeDev](http://sparetimedev.blogspot.my/2012/10/recycling-of-views-with-heterogeneous.html)
+
+[Implementing a Heterogenous ListView](https://guides.codepath.com/android/Implementing-a-Heterogenous-ListView)
+
+## Android Global Exception Handler
+
+[Android Global Exception Handler](http://blog.csdn.net/singwhatiwanna/article/details/17289479)
+
