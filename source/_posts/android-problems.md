@@ -315,3 +315,6 @@ References:
 
 [Android Global Exception Handler](http://blog.csdn.net/singwhatiwanna/article/details/17289479)
 
+## Android Fragment
+
+Programming with `Android Fragment` and `Android ViewPager`, you should know that the `Fragment` may get destroyed by the system, so in order to maintain the correct of the view, you should set view's property to it's expected state by the current context environment in the method `onCreateView`.

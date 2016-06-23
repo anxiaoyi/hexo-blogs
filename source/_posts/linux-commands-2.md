@@ -111,3 +111,61 @@ grep -Rn 'something' ./
 ```bash
 echo 'obase=16; 122' | bc
 ```
+
+### Curl
+
+```bash
+# -I, --head (HTTP/FTP/FILE)  Fetch  the  HTTP-header  only!
+curl -I baidu.com
+```
+
+```bash
+curl http://www.baidu.com > baidu.html
+```
+
+```bash
+curl -o baidu.html http://www.baidu.com
+```
+
+```bash
+# -v, --verbose Be  more  verbose/talkative  during  the  operation. Useful for debugging and seeing what's going on "under the hood".  A line starting with '>' means "header data" sent by curl, '<' means "header data" received by curl that is hidden in  normal  cases, and a line starting with '*' means additional info provided by curl.
+curl -v http://www.baidu.com
+```
+
+```bash
+# Enables  a full trace dump of all incoming and outgoing data, including descriptive information, to the given output file. Use "-" as filename to have the output sent to stdout.
+curl --trace <file> http://www.baidu.com
+```
+
+### tcpdump
+
+#### Capture Packets from Specific Interface
+
+```bash
+# ent0 is a "network adapter" which represents a physical device
+# while en0 is a logical device (based on ent0) representing a standard "network Interface"
+sudo tcpdump -i ent0(en0)
+```
+
+#### Display Available Interfaces
+
+```bash
+sudo tcpdump -D
+```
+
+#### Display Captured Packets in HEX and ASCII
+
+```bash
+tcpdump -XX -i en0
+```
+
+[More Sample](http://www.tecmint.com/12-tcpdump-commands-a-network-sniffer-tool/)
+
+### host
+
+The host command performs DNS lookups. Give it a domain name and you’ll see the associated IP address. Give it an IP address and you’ll see the associated domain name.
+
+```bash
+host baidu.com
+host 220.181.57.217
+```

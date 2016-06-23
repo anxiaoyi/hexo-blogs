@@ -707,3 +707,7 @@ What's the Funk ???? ... Think after a short moment, I noticed that the fact tha
 ## UITabBarController 应该在方法`viewDidLoad`中 添加 `UIViewController`，不要放在`viewWillAppear`中，否则每次都实例化一个新的`ViewController`。这样的话，返回来的时候，`UITableViewController`无法自动恢复到原来的位置，因为这是一个新的`ViewController` -_-||
 
 ## AppCrash的时候，使用`NSSetUncaughtExceptionHandler`拦截异常，想要把异常信息异步用`dispatch_async`异步保存到文件中，发现有时候它不执行，执行不执行不确定，采用同步方式永远执行。
+
+## [identifierForVendor](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDevice_Class/#//apple_ref/occ/instp/UIDevice/identifierForVendor) 可能会改变，需要用`NSUserDefaults`来cache它。
+
+## 量比较大的递归和While循环可能导致UI线程得不到执行…想办法自己Sleep一下，让其它线程得以执行
