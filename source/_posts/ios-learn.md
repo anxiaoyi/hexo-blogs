@@ -711,3 +711,15 @@ What's the Funk ???? ... Think after a short moment, I noticed that the fact tha
 ## [identifierForVendor](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDevice_Class/#//apple_ref/occ/instp/UIDevice/identifierForVendor) 可能会改变，需要用`NSUserDefaults`来cache它。
 
 ## 量比较大的递归和While循环可能导致UI线程得不到执行…想办法自己Sleep一下，让其它线程得以执行
+
+## cocoaPods: 库中包含其它依赖库
+
+在cocoapod低版本上，那么引入的时候，不能这样引入'#import <AFNetworking.h>'
+
+Cocoapods doesn't support imports like <Mixpanel.h> and only <Mixpanel/Mixpanel.h>. Just pushed this fix in version 2.0.8
+
+[issue-3913](https://github.com/CocoaPods/CocoaPods/issues/3913#issuecomment-128028170)
+
+[issue-417](https://github.com/segmentio/analytics-ios/issues/417)
+
+[non-modular](http://stackoverflow.com/questions/27776497/include-of-non-modular-header-inside-framework-module)
