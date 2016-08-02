@@ -13,3 +13,9 @@ date: 2016-07-20
 [土土哥的技术Blog](http://ju.outofmemory.cn/feed/4235/)
 
 [dribbble - Show and tell for designers](https://dribbble.com/)
+
+[Android学习路线指南](http://blog.csdn.net/singwhatiwanna/article/details/49560409)
+[android 6.0权限动态申请](http://www.voidcn.com/blog/changlei_shennan/article/p-5789569.html)
+[各种PDF电子书下载地址](http://www.voidcn.com/blog/u013830841/article/p-4343019.html)
+[lintcode](http://www.lintcode.com/)
+[LintCode，hihoCoder，LeetCode有什么区别？](http://www.zhihu.com/question/31218682)
