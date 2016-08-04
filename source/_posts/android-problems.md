@@ -318,3 +318,99 @@ References:
 ## Android Fragment
 
 Programming with `Android Fragment` and `Android ViewPager`, you should know that the `Fragment` may get destroyed by the system, so in order to maintain the correct of the view, you should set view's property to it's expected state by the current context environment in the method `onCreateView`.
+
+## Intent Flags
+
+The `FLAG_ACTIVITY_NO_HISTORY` flag keeps the new Activity from being added to the history stack. 启动 Activity 的时候，如果你添加上了这个 Flag ：
+
+```java
+intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+```
+
+那么进入这个页面，然后按下 Home 键，这个页面会立马 Destroy 掉。
+
+```java
+public class Intent implements Parcelable, Cloneable {
+
+    /**
+     * If set, the new activity is not kept in the history stack.  As soon as
+     * the user navigates away from it, the activity is finished.  This may also
+     * be set with the {@link android.R.styleable#AndroidManifestActivity_noHistory
+     * noHistory} attribute.
+     *
+     * <p>If set, {@link android.app.Activity#onActivityResult onActivityResult()}
+     * is never invoked when the current activity starts a new activity which
+     * sets a result and finishes.
+     */
+    public static final int FLAG_ACTIVITY_NO_HISTORY = 0x40000000;
+
+    /**
+     * If set, and the activity being launched is already running in the
+     * current task, then instead of launching a new instance of that activity,
+     * all of the other activities on top of it will be closed and this Intent
+     * will be delivered to the (now on top) old activity as a new Intent.
+     *
+     * <p>For example, consider a task consisting of the activities: A, B, C, D.
+     * If D calls startActivity() with an Intent that resolves to the component
+     * of activity B, then C and D will be finished and B receive the given
+     * Intent, resulting in the stack now being: A, B.
+     *
+     * <p>The currently running instance of activity B in the above example will
+     * either receive the new intent you are starting here in its
+     * onNewIntent() method, or be itself finished and restarted with the
+     * new intent.  If it has declared its launch mode to be "multiple" (the
+     * default) and you have not set {@link #FLAG_ACTIVITY_SINGLE_TOP} in
+     * the same intent, then it will be finished and re-created; for all other
+     * launch modes or if {@link #FLAG_ACTIVITY_SINGLE_TOP} is set then this
+     * Intent will be delivered to the current instance's onNewIntent().
+     *
+     * <p>This launch mode can also be used to good effect in conjunction with
+     * {@link #FLAG_ACTIVITY_NEW_TASK}: if used to start the root activity
+     * of a task, it will bring any currently running instance of that task
+     * to the foreground, and then clear it to its root state.  This is
+     * especially useful, for example, when launching an activity from the
+     * notification manager.
+     *
+     * <p>See
+     * <a href="{@docRoot}guide/topics/fundamentals/tasks-and-back-stack.html">Tasks and Back
+     * Stack</a> for more information about tasks.
+     */
+    public static final int FLAG_ACTIVITY_CLEAR_TOP = 0x04000000
+}
+```
+
+[view-the-tasks-activity-stack](http://stackoverflow.com/questions/2442713/view-the-tasks-activity-stack)
+
+```bash
+# /正则表达式/p 符合的行
+# /正则表达式1/p,/正则表达式2/p 之间的所有行
+adb -s 192.168.56.101:5555 shell dumpsys activity activities | sed -En -e '/Stack #/p' -e '/Running activities/,/Run #0/p'
+```
+
+Android has an interesting command called `dumpsys` to dump some system information. In order to get the complete status just run (will produce a large output):
+
+```bash
+adb shell dumpsys
+```
+
+sed -- stream editor
+
+```bash
+-E      Interpret regular expressions as extended (modern) regular expressions rather than
+             basic regular expressions (BRE's).  The re_format(7) manual page fully describes
+             both formats.
+
+-e command
+             Append the editing commands specified by the command argument to the list of com-
+             mands.
+
+-n      By default, each line of input is echoed to the standard output after all of the
+             commands have been applied to it.  The -n option suppresses this behavior.
+
+A command line with one address selects all of the pattern spaces that match the address.
+
+A command line with two addresses selects an inclusive range.
+
+[2addr]p
+             Write the pattern space to standard output.
+```

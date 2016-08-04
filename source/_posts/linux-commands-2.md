@@ -169,3 +169,59 @@ The host command performs DNS lookups. Give it a domain name and you’ll see th
 host baidu.com
 host 220.181.57.217
 ```
+
+### ls
+
+```bash
+# ls -l
+-rw-r--r--   1 zk  staff  3045 Jul  8 11:19 README.md    
+```
+
+```bash
+If the -l option is given, the following information is displayed for each file: file mode,
+     number of links, owner name, group name, number of bytes in the file, abbreviated (简短的，仅可蔽体的，小型的) month,
+     day-of-month file was last modified, hour file last modified, minute file last modified,
+     and the pathname.
+
+     The file mode printed under the -l option consists of the entry type, owner permissions,
+     and group permissions.  The entry type character describes the type of file, as follows:
+
+           b     Block special file.
+           c     Character special file.
+           d     Directory.
+           l     Symbolic link.
+           s     Socket link.
+           p     FIFO.
+           -     Regular file.
+
+     The next three fields are three characters each: owner permissions, group permissions, and
+     other permissions.  Each field has three character positions:
+
+           1.   If r, the file is readable; if -, it is not readable.
+
+           2.   If w, the file is writable; if -, it is not writable.
+
+           3.   The first of the following that applies:
+
+                      S     If in the owner permissions, the file is not executable and set-
+                            user-ID mode is set.  If in the group permissions, the file is not
+                            executable and set-group-ID mode is set.
+
+                      s     If in the owner permissions, the file is executable and set-user-ID
+                            mode is set.  If in the group permissions, the file is executable
+                            and setgroup-ID mode is set.
+
+                      x     The file is executable or the directory is searchable.
+
+                      -     The file is neither readable, writable, executable, nor set-user-ID
+                            nor set-group-ID mode, nor sticky.  (See below.)
+
+                These next two apply only to the third character in the last group (other per-
+                missions).
+
+                      T     The sticky bit is set (mode 1000), but not execute or search permis-
+                            sion.  (See chmod(1) or sticky(8).)
+
+                      t     The sticky bit is set (mode 1000), and is searchable or executable.
+                            (See chmod(1) or sticky(8).)
+```
